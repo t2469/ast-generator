@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    container_name: back
+    volumes:
+      - ./backend/:/go/src/app
+    tty: true
+    ports:
+      - "8080:8080"
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    container_name: front
+    volumes:
+      - ./frontend/:/home/node/app
+    tty: true
+    ports:
+      - "5173:5173"

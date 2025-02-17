@@ -1,4 +1,5 @@
-FROM ubuntu:latest
-LABEL authors="tamuratomoki"
+FROM golang:1.23.6
 
-ENTRYPOINT ["top", "-b"]
+# ディレクトリ指定
+ENV ROOT=/go/src/app
+WORKDIR ${ROOT}

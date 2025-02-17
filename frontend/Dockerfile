@@ -1,4 +1,3 @@
-FROM ubuntu:latest
-LABEL authors="tamuratomoki"
+FROM node:22-alpine
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /home/node/app
