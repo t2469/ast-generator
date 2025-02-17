@@ -18,9 +18,21 @@
 
 ### 3. 各サーバーの起動
 
-Reactの場合
+#### Reactの場合
 ```bash
   docker exec -it front ash
   npm run dev
 ```
 
+### その他
+#### dbへのアクセス
+```bash
+  docker exec -it db bash # dbコンテナへ入る
+```
+
+#### mysqlへのログイン
+
+パスワードは<MYSQL_PASSWORD>を入力
+```bash
+  mysql -u <MYSQL_USER> -p
+```
