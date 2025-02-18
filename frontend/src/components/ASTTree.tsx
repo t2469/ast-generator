@@ -1,23 +1,48 @@
-import React from "react";
-import { ASTNode } from "../services/api";
+import React, {useEffect, useRef, useState} from "react";
+import Tree from "react-d3-tree";
+import {ASTNode} from "../services/api";
 
 interface ASTTreeProps {
     node: ASTNode;
 }
 
-const ASTTree: React.FC<ASTTreeProps> = ({ node }) => {
+interface TreeNode {
+    name: string;
+    attributes?: { [key: string]: any };
+    children?: TreeNode[];
+}
+
+const transformASTToTree = (node: ASTNode): TreeNode => {
+    return {
+        name: node.type,
+        children: node.children ? node.children.map(transformASTToTree) : [],
+    };
+};
+
+const ASTTree: React.FC<ASTTreeProps> = ({node}) => {
+    const [translate, setTranslate] = useState({x: 0, y: 0});
+    const treeContainer = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (treeContainer.current) {
+            const dimensions = treeContainer.current.getBoundingClientRect();
+            setTranslate({
+                x: dimensions.width,
+                y: dimensions.height,
+            });
+        }
+    }, []);
+
+    const treeData = transformASTToTree(node);
+
     return (
-        <div style={{ marginLeft: "20px", borderLeft: "1px solid #ccc", paddingLeft: "10px" }}>
-            <div>
-                <strong>{node.type}</strong> ({node.start_byte} - {node.end_byte})
-            </div>
-            {node.children && node.children.length > 0 && (
-                <div>
-                    {node.children.map((child, index) => (
-                        <ASTTree key={index} node={child} />
-                    ))}
-                </div>
-            )}
+        <div id="treeWrapper" style={{width: "100%", height: "500px", border: "1px solid #ccc"}} ref={treeContainer}>
+            <Tree
+                data={treeData}
+                translate={translate}
+                orientation="vertical"
+                pathFunc="elbow"
+            />
         </div>
     );
 };

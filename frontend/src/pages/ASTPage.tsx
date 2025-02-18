@@ -45,7 +45,7 @@ const ASTPage: React.FC = () => {
                 {error && <p style={{color: "red"}}>エラー: {error}</p>}
             </div>
             <div style={{flex: 1}}>
-                <h2>構文木 (AST) 表示</h2>
+                <h2>構文木(AST)表示</h2>
                 {ast ? <ASTTree node={ast}/> : <p>解析結果がここに表示されます</p>}
             </div>
         </div>
