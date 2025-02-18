@@ -1,0 +1,33 @@
+#astheader{
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    z-index: 2;
+}
+
+.link{
+    width:max-content;
+}
+
+#astheader ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    align-items:center;
+  }
+  
+  #astheader ul li {
+    margin-right: 20px;
+    background-color: #D9D9D9;
+    width: 80px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #astheader ul li a {
+    color: #000;
+    text-decoration: none;
+  }

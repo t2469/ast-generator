@@ -1,0 +1,30 @@
+#main{
+    overflow: auto;
+    width: 100vw;
+    height: 85vh;
+}
+
+#searcharea{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    z-index: 1;
+    display: flex;
+}
+
+#searcharea > *{
+    margin: 5px;
+}
+
+#main ul{
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    
+}
+
+#main ul li{
+    background-color: #D9D9D9;
+    margin: 19px;
+    width: 300px;
+    height: 250px;
+}
