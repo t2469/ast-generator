@@ -14,8 +14,8 @@ const ASTPage: React.FC = () => {
         try {
             const result = await parseCode({language, code});
             setAst(result);
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : '不明なエラーが発生しました');
         }
     };
 

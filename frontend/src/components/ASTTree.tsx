@@ -8,7 +8,7 @@ interface ASTTreeProps {
 
 interface TreeNode {
     name: string;
-    attributes?: { [key: string]: any };
+    attributes?: { [key: string]: string | number | boolean };
     children?: TreeNode[];
 }
 
