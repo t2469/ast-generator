@@ -1,13 +1,17 @@
 package main
 
 import (
+	"AST-Generator/config"
 	"AST-Generator/routes"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 func main() {
+	config.InitConfig()
+
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
@@ -17,10 +21,6 @@ func main() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
-
-	// ルーティングの設定
 	routes.RegisterRoutes(router)
-
-	// サーバー起動
 	router.Run(":8080")
 }
