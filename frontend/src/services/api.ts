@@ -10,14 +10,39 @@ export interface ParseRequest {
     code: string;
 }
 
+export interface UserInfo {
+    name: string;
+    email: string;
+    picture: string;
+    sub: string;
+}
+
 export async function parseCode(request: ParseRequest): Promise<ASTNode> {
     const response = await fetch("http://localhost:8080/parse", {
         method: "POST",
-        headers: {"Content-Type": "application/json",},
+        headers: { "Content-Type": "application/json", },
         body: JSON.stringify(request),
     });
     if (!response.ok) {
         throw new Error(`parse API Error: ${response.status}`);
     }
-    return response.json();
+    return response.json() as Promise<ASTNode>;
+}
+
+export async function getCurrentUser(): Promise<UserInfo> {
+    try {
+        const response = await fetch("http://localhost:8080/auth/current_user", {
+            method: "GET",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error(`get current user API Error: ${response.status}`);
+        }
+        const data = await response.json();
+        return data as UserInfo;
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+        throw error;
+    }
 }

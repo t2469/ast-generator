@@ -11,7 +11,36 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
+
+func GetCurrentUser(c *gin.Context) {
+	userClaims, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	claims, ok := userClaims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse user claims"})
+		return
+	}
+
+	userInfo := gin.H{
+		"name":    claims["name"],
+		"email":   claims["email"],
+		"picture": claims["picture"],
+		"sub":     claims["sub"],
+	}
+
+	c.JSON(http.StatusOK, userInfo)
+}
+
+func LogoutHandler(c *gin.Context) {
+	c.SetCookie("auth_token", "", -1, "/", "", false, true)
+	c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
+}
 
 func GoogleCallbackHandler(c *gin.Context) {
 	stateQuery := c.Query("state")
@@ -69,8 +98,10 @@ func GoogleCallbackHandler(c *gin.Context) {
 		return
 	}
 
+	c.SetCookie("auth_token", jwtToken, 86400, "/", "", false, true)
+
 	c.JSON(http.StatusOK, gin.H{
-		"token": jwtToken,
-		"user":  userInfo,
+		"message": "Login successful.",
+		"user":    userInfo,
 	})
 }

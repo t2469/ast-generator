@@ -15,7 +15,7 @@ function ProsessToProvider() {
 const LoginPage: React.FC = () => {
     return (
         <div className="login-container">
-            <GoogleOAuthProvider clientId="59621130068-tnl0dbd1qbhj41uf09ippou0klbd5l7l.apps.googleusercontent.com">
+            <GoogleOAuthProvider clientId="775189385683-85h2mrb9ualv0l86f6v4rk4ct8qdk451.apps.googleusercontent.com">
                 <ProsessToProvider />
             </GoogleOAuthProvider>
         </div>

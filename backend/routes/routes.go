@@ -23,5 +23,8 @@ func RegisterRoutes(router *gin.Engine) {
 		url := config.GoogleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline)
 		c.Redirect(http.StatusTemporaryRedirect, url)
 	})
+	router.GET("/auth/logout", controllers.LogoutHandler)
+
 	router.GET("/auth/google/callback", controllers.GoogleCallbackHandler)
+	router.GET("/auth/current_user", controllers.JWTAuthMiddleware(), controllers.GetCurrentUser)
 }
