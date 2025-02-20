@@ -1,6 +1,8 @@
 package config
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"log"
 	"os"
 
@@ -30,4 +32,14 @@ func InitConfig() {
 	}
 
 	JwtSecret = os.Getenv("JWT_SECRET")
+}
+
+func GenerateState(len int) string {
+	b := make([]byte, len)
+	_, err := rand.Read(b)
+	if err != nil {
+		log.Printf("Error generating random state: %v", err)
+		return ""
+	}
+	return base64.URLEncoding.EncodeToString(b)
 }

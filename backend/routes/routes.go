@@ -5,6 +5,7 @@ import (
 	"AST-Generator/controllers"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 )
@@ -13,7 +14,13 @@ func RegisterRoutes(router *gin.Engine) {
 	router.POST("/parse", controllers.ParseCode)
 
 	router.GET("/auth/google/login", func(c *gin.Context) {
-		url := config.GoogleOauthConfig.AuthCodeURL("str", oauth2.AccessTypeOffline)
+		state := config.GenerateState(16)
+
+		session := sessions.Default(c)
+		session.Set("oauthState", state)
+		session.Save()
+
+		url := config.GoogleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline)
 		c.Redirect(http.StatusTemporaryRedirect, url)
 	})
 	router.GET("/auth/google/callback", controllers.GoogleCallbackHandler)

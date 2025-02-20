@@ -7,6 +7,9 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 )
 
 func main() {
@@ -21,6 +24,10 @@ func main() {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	store := cookie.NewStore([]byte("super-secret-key"))
+	router.Use(sessions.Sessions("mysession", store))
+
 	routes.RegisterRoutes(router)
 	router.Run(":8080")
 }

@@ -9,10 +9,26 @@ import (
 	"AST-Generator/config"
 	"AST-Generator/services"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func GoogleCallbackHandler(c *gin.Context) {
+	stateQuery := c.Query("state")
+	if stateQuery == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "State not found in query"})
+		return
+	}
+
+	session := sessions.Default(c)
+	storedState := session.Get("oauthState")
+	if storedState == nil || stateQuery != storedState {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid state parameter"})
+		return
+	}
+	session.Delete("oauthState")
+	session.Save()
+
 	code := c.Query("code")
 	if code == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Code not found"})
