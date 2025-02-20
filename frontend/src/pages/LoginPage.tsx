@@ -1,4 +1,17 @@
 import React, { useState } from 'react';
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+
+function ProsessToProvider() {
+    const login = useGoogleLogin({
+        onSuccess: (codeResponse) => console.log(codeResponse),
+        flow: "auth-code",
+        scope: "email profile openid",
+    });
+  
+    return (
+      <button onClick={ login }>Googleでログイン</button>
+    );
+  };
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -35,6 +48,9 @@ const LoginPage: React.FC = () => {
                 </div>
                 <button type="submit">ログイン</button>
             </form>
+            <GoogleOAuthProvider clientId="775189385683-85h2mrb9ualv0l86f6v4rk4ct8qdk451.apps.googleusercontent.com">
+                <ProsessToProvider />
+            </GoogleOAuthProvider>
         </div>
     );
 };
