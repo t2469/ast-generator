@@ -1,4 +1,4 @@
-#astheader{
+#header{
     align-items: center;
     background-color: #333;
     color: #fff;
@@ -9,7 +9,7 @@
     width:max-content;
 }
 
-#astheader ul {
+#header ul {
     list-style: none;
     margin: 0;
     padding: 10px;
@@ -17,7 +17,7 @@
     align-items:center;
   }
   
-  #astheader ul li {
+  #header ul li {
     margin-right: 20px;
     background-color: #D9D9D9;
     width: 80px;
@@ -27,7 +27,7 @@
     align-items: center;
   }
   
-  #astheader ul li a {
+  #header ul li a {
     color: #000;
     text-decoration: none;
   }
