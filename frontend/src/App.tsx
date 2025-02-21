@@ -5,20 +5,23 @@ import LoginPage from './pages/LoginPage'
 import Header from './components/Header.tsx'
 import SearchPage from './pages/SearchPage.tsx'
 import UploadPage from './pages/UploadPage.tsx'
-
+import { AuthProvider } from './context/AuthProvider'
 function App() {
     return (
         <>
-            <BrowserRouter>
-            <Header />
-            <Routes>
-                <Route path="/" element={<ASTTree />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/upload" element={<UploadPage />} />
-                <Route path="/login" element={<LoginPage />} />
-            </Routes>
-            </BrowserRouter>
+            <AuthProvider>
+                <BrowserRouter>
+                    <Header />
+                    <Routes>
+                        <Route path="/" element={<ASTTree />} />
+                        <Route path="/search" element={<SearchPage />} />
+                        <Route path="/upload" element={<UploadPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                    </Routes>
+                </BrowserRouter>
+            </AuthProvider>
         </>
+
     )
 }
 

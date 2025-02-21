@@ -1,19 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
 
 import './header.css'
 import { Link } from 'react-router-dom'
-import { getCurrentUser, UserInfo, logout } from '../services/api'
+import { logout } from '../services/api'
+import { AuthContext } from '../context/AuthContext'
 
 function Header() {
-    const [user, setUser] = useState<UserInfo | null>(null);
-
-    useEffect(() => {
-        async function fetchUser() {
-            const currentUser = await getCurrentUser();
-            setUser(currentUser);
-        }
-        fetchUser();
-    }, []);
+    const { user, setUser } = useContext(AuthContext);
 
     const handleLogout = async () => {
         const success = await logout();
