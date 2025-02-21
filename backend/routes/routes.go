@@ -1,15 +1,34 @@
 package routes
 
 import (
+	"AST-Generator/config"
 	"AST-Generator/controllers"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2"
 )
 
 func RegisterRoutes(router *gin.Engine) {
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "pong"})
-	})
-
 	router.POST("/parse", controllers.ParseCode)
+
+	router.GET("/auth/google/login", func(c *gin.Context) {
+		state := config.GenerateState(16)
+
+		session := sessions.Default(c)
+		session.Set("oauthState", state)
+		session.Save()
+
+		url := config.GoogleOauthConfig.AuthCodeURL(
+			state,
+			oauth2.AccessTypeOffline,
+			oauth2.SetAuthURLParam("prompt", "select_account"),
+			oauth2.SetAuthURLParam("include_granted_scopes", "true"),
+		)
+		c.Redirect(http.StatusTemporaryRedirect, url)
+	})
+	router.GET("/auth/google/callback", controllers.GoogleCallbackHandler)
+	router.GET("/auth/logout", controllers.LogoutHandler)
+	router.GET("/auth/current_user", controllers.JWTAuthMiddleware(), controllers.GetCurrentUser)
 }

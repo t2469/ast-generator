@@ -1,13 +1,20 @@
 package main
 
 import (
+	"AST-Generator/config"
 	"AST-Generator/routes"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"time"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 )
 
 func main() {
+	config.InitConfig()
+
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
@@ -18,9 +25,9 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// ルーティングの設定
-	routes.RegisterRoutes(router)
+	store := cookie.NewStore([]byte("super-secret-key"))
+	router.Use(sessions.Sessions("mysession", store))
 
-	// サーバー起動
+	routes.RegisterRoutes(router)
 	router.Run(":8080")
 }
