@@ -9,8 +9,10 @@ import (
 )
 
 type SaveSourceCodeRequest struct {
-	Language string `json:"language" binding:"required"`
-	Code     string `json:"code" binding:"required"`
+	Language    string `json:"language" binding:"required"`
+	Code        string `json:"code" binding:"required"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description"`
 }
 
 func SaveSourceCodeHandler(c *gin.Context) {
@@ -21,8 +23,10 @@ func SaveSourceCodeHandler(c *gin.Context) {
 	}
 
 	record := models.SourceCode{
-		Language: req.Language,
-		Code:     req.Code,
+		Title:       req.Title,
+		Description: req.Description,
+		Language:    req.Language,
+		Code:        req.Code,
 	}
 
 	if err := db.DB.Create(&record).Error; err != nil {

@@ -36,10 +36,17 @@ func TestSaveSourceCodeHandler(t *testing.T) {
 	router := gin.Default()
 	router.POST("/source_codes/save", controllers.SaveSourceCodeHandler)
 
-	t.Log("Creating test payload")
-	payload := controllers.SaveSourceCodeRequest{
-		Language: "go",
-		Code:     "package main\n\nfunc main() {\n    println(\"Hello World\")\n}",
+	t.Log("Creating test payload with title and description")
+	payload := struct {
+		Language    string `json:"language" binding:"required"`
+		Code        string `json:"code" binding:"required"`
+		Title       string `json:"title" binding:"required"`
+		Description string `json:"description"`
+	}{
+		Language:    "go",
+		Code:        "package main\n\nfunc main() {\n    println(\"Hello World\")\n}",
+		Title:       "Hello World Example",
+		Description: "This is a sample code that prints Hello World.",
 	}
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
@@ -69,9 +76,15 @@ func TestSaveSourceCodeHandler(t *testing.T) {
 
 	t.Log("Response body:", resp)
 
-	if msg, ok := resp["message"].(string); !ok || msg != "保存成功" {
-		t.Fatalf("Expected message '保存成功', got %v", resp["message"])
+	if msg, ok := resp["message"].(string); !ok || msg != "Source code saved successfully" {
+		t.Fatalf("Expected message 'Source code saved successfully', got %v", resp["message"])
 	}
+
+	var records []models.SourceCode
+	if err := db.DB.Find(&records).Error; err != nil {
+		t.Fatal("Failed to query saved records:", err)
+	}
+	t.Log("Saved records:", records)
 
 	t.Log("Test completed successfully")
 }
