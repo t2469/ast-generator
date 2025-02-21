@@ -4,6 +4,7 @@ import (
 	"AST-Generator/db"
 	"AST-Generator/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,4 +35,21 @@ func SaveSourceCodeHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Source code saved successfully"})
+}
+
+func DeleteSourceCodeHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	result := db.DB.Delete(&models.SourceCode{}, id)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete source code"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Source code deleted successfully"})
 }
