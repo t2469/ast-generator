@@ -2,7 +2,10 @@ package main
 
 import (
 	"AST-Generator/config"
+	"AST-Generator/db"
+	"AST-Generator/models"
 	"AST-Generator/routes"
+	"log"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -14,6 +17,12 @@ import (
 
 func main() {
 	config.InitConfig()
+	if err := db.InitDB(); err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+	if err := db.DB.AutoMigrate(&models.SourceCode{}); err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
+	}
 
 	router := gin.Default()
 

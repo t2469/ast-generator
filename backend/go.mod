@@ -10,6 +10,8 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/smacker/go-tree-sitter v0.0.0-20240827094217-dd81d9e9be82
 	golang.org/x/oauth2 v0.26.0
+	gorm.io/driver/mysql v1.5.7
+	gorm.io/gorm v1.25.12
 )
 
 require (
@@ -47,6 +49,4 @@ require (
 	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/driver/mysql v1.5.7 // indirect
-	gorm.io/gorm v1.25.12 // indirect
 )

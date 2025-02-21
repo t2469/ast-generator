@@ -31,4 +31,6 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/auth/google/callback", controllers.GoogleCallbackHandler)
 	router.GET("/auth/logout", controllers.LogoutHandler)
 	router.GET("/auth/current_user", controllers.JWTAuthMiddleware(), controllers.GetCurrentUser)
+
+	router.POST("/source_codes/save", controllers.SaveSourceCodeHandler)
 }
