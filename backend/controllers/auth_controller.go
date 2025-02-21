@@ -89,10 +89,13 @@ func GoogleCallbackHandler(c *gin.Context) {
 		return
 	}
 
+	fmt.Printf("Google userInfo: %+v\n", userInfo)
 	userID, _ := userInfo["sub"].(string)
 	email, _ := userInfo["email"].(string)
+	name, _ := userInfo["name"].(string)
+	picture, _ := userInfo["picture"].(string)
 
-	jwtToken, err := services.GenerateJWT(userID, email, config.JwtSecret)
+	jwtToken, err := services.GenerateJWT(userID, email, name, picture, config.JwtSecret)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate JWT"})
 		return

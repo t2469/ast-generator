@@ -24,7 +24,7 @@ function Header() {
                     <li><Link to="/upload">投稿</Link></li>
                     <li>
                         {user ? (
-                            <img src={user.picture} alt="user-icon" />
+                            <div>{user.name}</div>
                         ) : (
                             <Link to="/login">ログイン</Link>
                         )}
