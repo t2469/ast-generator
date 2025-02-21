@@ -46,3 +46,16 @@ export async function getCurrentUser(): Promise<UserInfo> {
         throw error;
     }
 }
+
+export async function logout(): Promise<boolean> {
+    try {
+      const response = await fetch("http://localhost:8080/auth/logout", {
+        method: "GET",
+        credentials: "include",
+      });
+      return response.ok;
+    } catch (error) {
+      console.error("Logout failed:", error);
+      return false;
+    }
+  }

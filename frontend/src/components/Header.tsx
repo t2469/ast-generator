@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import './header.css'
 import { Link } from 'react-router-dom'
-import { getCurrentUser, UserInfo } from '../services/api'
+import { getCurrentUser, UserInfo, logout } from '../services/api'
 
 function Header() {
     const [user, setUser] = useState<UserInfo | null>(null);
@@ -14,7 +14,16 @@ function Header() {
         }
         fetchUser();
     }, []);
-    
+
+    const handleLogout = async () => {
+        const success = await logout();
+        if (success) {
+            setUser(null);
+        } else {
+            alert("Logout failed");
+        }
+    };
+
     return (
         <>
             <header id="header">
@@ -29,6 +38,11 @@ function Header() {
                             <Link to="/login">ログイン</Link>
                         )}
                     </li>
+                    {user && (
+                        <li>
+                            <button onClick={handleLogout}>ログアウト</button>
+                        </li>
+                    )}
                 </ul>
             </header>
         </>
