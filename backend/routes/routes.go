@@ -20,11 +20,15 @@ func RegisterRoutes(router *gin.Engine) {
 		session.Set("oauthState", state)
 		session.Save()
 
-		url := config.GoogleOauthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline)
+		url := config.GoogleOauthConfig.AuthCodeURL(
+			state,
+			oauth2.AccessTypeOffline,
+			oauth2.SetAuthURLParam("prompt", "select_account"),
+			oauth2.SetAuthURLParam("include_granted_scopes", "true"),
+		)
 		c.Redirect(http.StatusTemporaryRedirect, url)
 	})
-	router.GET("/auth/logout", controllers.LogoutHandler)
-
 	router.GET("/auth/google/callback", controllers.GoogleCallbackHandler)
+	router.GET("/auth/logout", controllers.LogoutHandler)
 	router.GET("/auth/current_user", controllers.JWTAuthMiddleware(), controllers.GetCurrentUser)
 }

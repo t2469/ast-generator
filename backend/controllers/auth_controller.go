@@ -100,8 +100,5 @@ func GoogleCallbackHandler(c *gin.Context) {
 
 	c.SetCookie("auth_token", jwtToken, 86400, "/", "", false, true)
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful.",
-		"user":    userInfo,
-	})
+	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:5173")
 }
