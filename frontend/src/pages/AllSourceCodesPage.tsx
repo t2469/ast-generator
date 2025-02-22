@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SourceCode, getAllSourceCodes } from "../services/api";
+import { SourceCode, getAllSourceCodes, deleteSourceCode } from "../services/api";
 
 const AllSourceCodesPage: React.FC = () => {
     const [sourceCodes, setSourceCodes] = useState<SourceCode[]>([]);
@@ -10,6 +10,16 @@ const AllSourceCodesPage: React.FC = () => {
             .then((data) => setSourceCodes(data))
             .catch((err) => setError(err instanceof Error ? err.message : "Error fetching source codes"));
     }, []);
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm("本当に削除しますか？")) return;
+        try {
+            await deleteSourceCode(id);
+            setSourceCodes((prev) => prev.filter((code) => code.id !== id));
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "削除中にエラーが発生しました");
+        }
+    };
 
     return (
         <div className="container mx-auto p-6 pt-20">
@@ -26,6 +36,12 @@ const AllSourceCodesPage: React.FC = () => {
                         <p className="text-sm text-gray-500 mt-1">
                             {new Date(code.created_at).toLocaleString()}
                         </p>
+                        <button
+                            onClick={() => handleDelete(code.id)}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                        >
+                            削除
+                        </button>
                     </div>
                 ))}
             </div>
