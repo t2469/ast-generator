@@ -17,6 +17,74 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestGetAllSourceCodesHandler(t *testing.T) {
+	t.Log("Setting Gin to test mode")
+	gin.SetMode(gin.TestMode)
+
+	t.Log("Initializing in-memory test DB")
+	testDB, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+	if err != nil {
+		t.Fatal("Failed to open test database:", err)
+	}
+	db.DB = testDB
+
+	t.Log("Running AutoMigrate for SourceCode model")
+	if err := db.DB.AutoMigrate(&models.SourceCode{}); err != nil {
+		t.Fatal("AutoMigrate error:", err)
+	}
+
+	records := []models.SourceCode{
+		{
+			Title:       "Title 1",
+			Description: "Description 1",
+			Language:    "go",
+			Code:        "package main\n\nfunc main() { println(\"Hello 1\") }",
+		},
+		{
+			Title:       "Title 2",
+			Description: "Description 2",
+			Language:    "cpp",
+			Code:        "#include <iostream>\n\nint main() { std::cout << \"Hello 2\"; return 0; }",
+		},
+	}
+	for _, rec := range records {
+		if err := db.DB.Create(&rec).Error; err != nil {
+			t.Fatal("Failed to create test record:", err)
+		}
+	}
+
+	t.Log("Setting up Gin router with /source_codes endpoint")
+	router := gin.Default()
+	router.GET("/source_codes", controllers.GetAllSourceCodesHandler)
+
+	t.Log("Creating HTTP GET request")
+	req, err := http.NewRequest(http.MethodGet, "/source_codes", nil)
+	if err != nil {
+		t.Fatal("Failed to create HTTP request:", err)
+	}
+
+	t.Log("Sending the request and recording the response")
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, req)
+
+	t.Log("Checking response status code")
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("Expected status code 200, got %d", recorder.Code)
+	}
+
+	var fetchedRecords []models.SourceCode
+	if err := json.Unmarshal(recorder.Body.Bytes(), &fetchedRecords); err != nil {
+		t.Fatal("Error unmarshalling response:", err)
+	}
+
+	t.Log("Fetched records:", fetchedRecords)
+	if len(fetchedRecords) != len(records) {
+		t.Fatalf("Expected %d records, got %d", len(records), len(fetchedRecords))
+	}
+
+	t.Log("TestGetAllSourceCodesHandler completed successfully")
+}
+
 func TestSaveSourceCodeHandler(t *testing.T) {
 	t.Log("Setting Gin to test mode")
 	gin.SetMode(gin.TestMode)
