@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import ASTTree from './pages/ASTPage.tsx';
 import LoginPage from './pages/LoginPage';
-import SearchPage from './pages/SearchPage.tsx';
+import AllSourceCodesPage from './pages/AllSourceCodesPage';
 import UploadPage from './pages/UploadPage.tsx';
 
 const pageVariants = {
@@ -48,7 +48,7 @@ const AnimApp: React.FC = () => {
                         }
                     />
                     <Route
-                        path="/search"
+                        path="/source_codes"
                         element={
                             <motion.div
                                 className="page absolute w-full"
@@ -58,7 +58,7 @@ const AnimApp: React.FC = () => {
                                 variants={pageVariants}
                                 transition={pageTransition}
                             >
-                                <SearchPage />
+                                <AllSourceCodesPage />
                             </motion.div>
                         }
                     />

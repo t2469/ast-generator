@@ -98,3 +98,14 @@ export async function deleteSourceCode(id: number): Promise<void> {
         throw new Error("Failed to delete source code");
     }
 }
+
+export async function getAllSourceCodes(): Promise<SourceCode[]> {
+    const response = await fetch("http://localhost:8080/source_codes", {
+        method: "GET",
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch source codes");
+    }
+    return response.json();
+}
