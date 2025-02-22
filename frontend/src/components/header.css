@@ -3,6 +3,7 @@
   background-color: #333;
   color: #000;
   z-index: 2;
+  text-shadow:none;
 }
 
 #header ul {
