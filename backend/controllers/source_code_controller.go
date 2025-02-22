@@ -16,6 +16,15 @@ type SaveSourceCodeRequest struct {
 	Description string `json:"description"`
 }
 
+func GetAllSourceCodesHandler(c *gin.Context) {
+	var codes []models.SourceCode
+	if err := db.DB.Find(&codes).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch source codes"})
+		return
+	}
+	c.JSON(http.StatusOK, codes)
+}
+
 func SaveSourceCodeHandler(c *gin.Context) {
 	var req SaveSourceCodeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
