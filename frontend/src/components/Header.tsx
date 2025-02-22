@@ -1,9 +1,8 @@
-import { useContext } from 'react'
-
-import './header.css'
-import { Link } from 'react-router-dom'
-import { logout } from '../services/api'
-import { AuthContext } from '../context/AuthContext'
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { logout } from "../services/api";
+import { AuthContext } from "../context/AuthContext";
+import "../index.css";
 
 function Header() {
     const { user, setUser } = useContext(AuthContext);
@@ -18,28 +17,41 @@ function Header() {
     };
 
     return (
-        <>
-            <header id="header">
-                <ul>
-                    <li><Link to="/">作成する</Link></li>
-                    <li><Link to="/search">探す</Link></li>
-                    <li><Link to="/upload">投稿</Link></li>
-                    <li>
-                        {user ? (
-                            <div>{user.name}</div>
-                        ) : (
-                            <Link to="/login">ログイン</Link>
-                        )}
-                    </li>
-                    {user && (
-                        <li>
-                            <button onClick={handleLogout}>ログアウト</button>
-                        </li>
+        <header className="fixed top-0 left-0 z-50 w-full bg-white shadow">
+            <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+                <div className="text-xl font-bold text-gray-800">
+                    <Link to="/">AST-Generator</Link>
+                </div>
+
+                <nav className="flex space-x-6 items-center">
+                    <Link to="/" className="text-gray-700 hover:text-blue-500 transition-colors">
+                        作成する
+                    </Link>
+                    <Link to="/search" className="text-gray-700 hover:text-blue-500 transition-colors">
+                        探す
+                    </Link>
+                    <Link to="/upload" className="text-gray-700 hover:text-blue-500 transition-colors">
+                        投稿
+                    </Link>
+                    {user ? (
+                        <>
+                            <div className="text-gray-700">{user.name}</div>
+                            <button
+                                onClick={handleLogout}
+                                className="text-gray-700 hover:text-red-500 transition-colors"
+                            >
+                                ログアウト
+                            </button>
+                        </>
+                    ) : (
+                        <Link to="/login" className="text-gray-700 hover:text-blue-500 transition-colors">
+                            ログイン
+                        </Link>
                     )}
-                </ul>
-            </header>
-        </>
-    )
+                </nav>
+            </div>
+        </header>
+    );
 }
 
-export default Header
+export default Header;

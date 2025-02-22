@@ -1,8 +1,8 @@
-import { BrowserRouter as Router} from 'react-router-dom';
-import './App.css'
-import Header from './components/Header.tsx'
-import { AuthProvider } from './context/AuthProvider'
-import AnimApp from './AnimationApp.tsx'
+import { BrowserRouter as Router } from 'react-router-dom';
+import './App.css';
+import Header from './components/Header.tsx';
+import { AuthProvider } from './context/AuthProvider';
+import AnimApp from './AnimationApp.tsx';
 
 function App() {
     return (
@@ -10,12 +10,13 @@ function App() {
             <AuthProvider>
                 <Router basename="/">
                     <Header />
-                    <AnimApp />
+                    <div className="pt-16">
+                        <AnimApp />
+                    </div>
                 </Router>
             </AuthProvider>
         </>
-
-    )
+    );
 }
 
-export default App
+export default App;
