@@ -17,6 +17,15 @@ export interface UserInfo {
     sub: string;
 }
 
+export interface SourceCode {
+    id: number;
+    title: string;
+    description: string;
+    language: string;
+    code: string;
+    created_at: string;
+}
+
 export async function parseCode(request: ParseRequest): Promise<ASTNode> {
     const response = await fetch("http://localhost:8080/parse", {
         method: "POST",
@@ -49,13 +58,43 @@ export async function getCurrentUser(): Promise<UserInfo> {
 
 export async function logout(): Promise<boolean> {
     try {
-      const response = await fetch("http://localhost:8080/auth/logout", {
-        method: "GET",
-        credentials: "include",
-      });
-      return response.ok;
+        const response = await fetch("http://localhost:8080/auth/logout", {
+            method: "GET",
+            credentials: "include",
+        });
+        return response.ok;
     } catch (error) {
-      console.error("Logout failed:", error);
-      return false;
+        console.error("Logout failed:", error);
+        return false;
     }
-  }
+}
+
+export async function saveSourceCode(data: {
+    title: string;
+    description: string;
+    language: string;
+    code: string;
+}): Promise<SourceCode> {
+    const response = await fetch("http://localhost:8080/source_codes/save", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to save source code");
+    }
+    return response.json();
+}
+
+export async function deleteSourceCode(id: number): Promise<void> {
+    const response = await fetch(`http://localhost:8080/source_codes/${id}`, {
+        method: "DELETE",
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete source code");
+    }
+}
