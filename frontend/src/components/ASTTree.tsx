@@ -36,7 +36,7 @@ const ASTTree: React.FC<ASTTreeProps> = ({node}) => {
     const treeData = transformASTToTree(node);
 
     return (
-        <div id="treeWrapper" style={{width: "100%", height: "500px", border: "1px solid #ccc"}} ref={treeContainer}>
+        <div id="treeWrapper" style={{width: "100%", height: "500px", border: "1px solid #ccc", backgroundColor: "#bbb"}} ref={treeContainer}>
             <Tree
                 data={treeData}
                 translate={translate}

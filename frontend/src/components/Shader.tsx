@@ -179,6 +179,7 @@ const Render = () => {
                         float t = uTime*.05;
                         
                         vec2 bgUV = vUv;
+                        
                         vec4 col = gradient(bgUV)*.8;
                         col += moon(bgUV);
                         col += stars(vUv, t);
