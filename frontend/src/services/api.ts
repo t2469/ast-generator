@@ -2,6 +2,7 @@ export interface ASTNode {
     type: string
     start_byte: number;
     end_byte: number;
+    content: string;
     children?: ASTNode[];
 }
 
