@@ -1,5 +1,6 @@
 export interface ASTNode {
-    type: string
+    id: number;
+    type: string;
     start_byte: number;
     end_byte: number;
     content: string;
