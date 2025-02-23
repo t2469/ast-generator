@@ -38,8 +38,8 @@ const CustomNodeElement: React.FC<CustomNodeElementProps> = ({ nodeDatum }) => {
                 style={{
                     width: "100",
                     height: '90',
-                    fill: 'turquoise',
-                    stroke: 'salmon',
+                    fill: 'gray',
+                    stroke: 'black',
                     strokeWidth: '3'
                 }}
             />
@@ -67,7 +67,7 @@ const ASTTree: React.FC<ASTTreeProps> = ({ node }) => {
             const dimensions = treeContainer.current.getBoundingClientRect();
             setTranslate({
                 x: dimensions.width / 2,
-                y: dimensions.height / 2,
+                y: dimensions.height / 4,
             });
         }
     }, []);
@@ -84,6 +84,9 @@ const ASTTree: React.FC<ASTTreeProps> = ({ node }) => {
                 translate={translate}
                 orientation="vertical"
                 pathFunc="step"
+                collapsible={true}
+                transitionDuration={1250}
+                enableLegacyTransitions={true}
             />
         </div>
     );

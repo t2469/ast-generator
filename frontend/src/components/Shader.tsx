@@ -9,7 +9,7 @@ let d=new Date();
 const Render = () => {
     const ref = useRef();
     useFrame(({clock, mouse}) => {
-        ref.current.material.uniforms.uTime = {value: clock.getElapsedTime()}
+        ref.current.material.uniforms.uTime = {value: clock.getElapsedTime()- (d.getTime()/1000)%86000}
     });
     return (
         <mesh ref={ref}>
