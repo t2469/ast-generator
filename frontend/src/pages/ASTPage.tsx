@@ -18,6 +18,25 @@ const ASTPage: React.FC = () => {
 
     const { user } = useContext(AuthContext);
 
+    const languageOptions = [
+        { value: "bash", label: "Bash" },
+        { value: "c", label: "C" },
+        { value: "cpp", label: "C++" },
+        { value: "css", label: "CSS" },
+        { value: "dockerfile", label: "Dockerfile" },
+        { value: "go", label: "Go" },
+        { value: "html", label: "HTML" },
+        { value: "java", label: "Java" },
+        { value: "javascript", label: "JavaScript" },
+        { value: "kotlin", label: "Kotlin" },
+        { value: "php", label: "PHP" },
+        { value: "python", label: "Python" },
+        { value: "ruby", label: "Ruby" },
+        { value: "rust", label: "Rust" },
+        { value: "sql", label: "SQL" },
+        { value: "yaml", label: "YAML" },
+    ];
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
@@ -76,8 +95,11 @@ const ASTPage: React.FC = () => {
                                         }}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                     >
-                                        <option value="go">Go</option>
-                                        <option value="cpp">C++</option>
+                                        {languageOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div>

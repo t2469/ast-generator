@@ -5,8 +5,22 @@ import (
 	"sync/atomic"
 
 	sitter "github.com/smacker/go-tree-sitter"
+	bashsitter "github.com/smacker/go-tree-sitter/bash"
+	csitter "github.com/smacker/go-tree-sitter/c"
 	cppsitter "github.com/smacker/go-tree-sitter/cpp"
+	csssitter "github.com/smacker/go-tree-sitter/css"
+	dockerfilesitter "github.com/smacker/go-tree-sitter/dockerfile"
 	gositter "github.com/smacker/go-tree-sitter/golang"
+	htmlsitter "github.com/smacker/go-tree-sitter/html"
+	javasitter "github.com/smacker/go-tree-sitter/java"
+	jssitter "github.com/smacker/go-tree-sitter/javascript"
+	kotlinsitter "github.com/smacker/go-tree-sitter/kotlin"
+	phpsitter "github.com/smacker/go-tree-sitter/php"
+	pythonsitter "github.com/smacker/go-tree-sitter/python"
+	rubysitter "github.com/smacker/go-tree-sitter/ruby"
+	rustsitter "github.com/smacker/go-tree-sitter/rust"
+	sqlsitter "github.com/smacker/go-tree-sitter/sql"
+	yamlsitter "github.com/smacker/go-tree-sitter/yaml"
 )
 
 type Point struct {
@@ -15,7 +29,7 @@ type Point struct {
 }
 
 type ASTNode struct {
-	ID         int       `json:"id"`                 // 各ノードに一意なID（
+	ID         int       `json:"id"`                 // 各ノードに一意なID
 	Type       string    `json:"type"`               // ノードの種類（例："identifier", "function_declaration" など）
 	Content    string    `json:"content,omitempty"`  // ソースコード上の該当部分のテキスト内容
 	StartByte  int       `json:"start_byte"`         // ノードが開始するバイト位置（ソースコード内）
@@ -34,12 +48,39 @@ func nextNodeID() int {
 
 func ParseCode(language string, code string) (ASTNode, error) {
 	var lang *sitter.Language
-
 	switch language {
-	case "go":
-		lang = gositter.GetLanguage()
+	case "bash":
+		lang = bashsitter.GetLanguage()
+	case "c":
+		lang = csitter.GetLanguage()
 	case "cpp":
 		lang = cppsitter.GetLanguage()
+	case "css":
+		lang = csssitter.GetLanguage()
+	case "dockerfile":
+		lang = dockerfilesitter.GetLanguage()
+	case "go":
+		lang = gositter.GetLanguage()
+	case "html":
+		lang = htmlsitter.GetLanguage()
+	case "java":
+		lang = javasitter.GetLanguage()
+	case "javascript":
+		lang = jssitter.GetLanguage()
+	case "kotlin":
+		lang = kotlinsitter.GetLanguage()
+	case "php":
+		lang = phpsitter.GetLanguage()
+	case "python":
+		lang = pythonsitter.GetLanguage()
+	case "ruby":
+		lang = rubysitter.GetLanguage()
+	case "rust":
+		lang = rustsitter.GetLanguage()
+	case "sql":
+		lang = sqlsitter.GetLanguage()
+	case "yaml":
+		lang = yamlsitter.GetLanguage()
 	default:
 		return ASTNode{}, errors.New("unsupported language")
 	}
