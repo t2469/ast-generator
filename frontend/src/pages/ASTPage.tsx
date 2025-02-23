@@ -197,8 +197,11 @@ const ASTPage: React.FC = () => {
                                     onChange={(e) => setModalLanguage(e.target.value)}
                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                 >
-                                    <option value="go">Go</option>
-                                    <option value="cpp">C++</option>
+                                    {languageOptions.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                             <div>
