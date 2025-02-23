@@ -33,6 +33,7 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/auth/current_user", controllers.JWTAuthMiddleware(), controllers.GetCurrentUser)
 
 	router.GET("/source_codes", controllers.GetAllSourceCodesHandler)
-	router.POST("/source_codes/save", controllers.SaveSourceCodeHandler)
-	router.DELETE("/source_codes/:id", controllers.DeleteSourceCodeHandler)
+	router.GET("/source_codes/user", controllers.JWTAuthMiddleware(), controllers.GetUserSourceCodesHandler)
+	router.POST("/source_codes/save", controllers.JWTAuthMiddleware(), controllers.SaveSourceCodeHandler)
+	router.DELETE("/source_codes/:id", controllers.JWTAuthMiddleware(), controllers.DeleteSourceCodeHandler)
 }

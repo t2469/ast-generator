@@ -1,4 +1,4 @@
-import { useContext,useState,useRef, useEffect } from "react";
+import { useContext,useState,useRef } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../services/api";
 import { AuthContext } from "../context/AuthContext";
@@ -34,12 +34,11 @@ function Header() {
                     <Link to="/" className="text-gray-700 hover:text-blue-500 transition-colors">
                         作成する
                     </Link>
-                    <Link to="/source_codes" className="text-gray-700 hover:text-blue-500 transition-colors">
-                        保存されたプログラム一覧
-                    </Link>
-                    <Link to="/upload" className="text-gray-700 hover:text-blue-500 transition-colors">
-                        投稿
-                    </Link>
+                    {user && (
+                        <Link to="/source_codes" className="text-gray-700 hover:text-blue-500 transition-colors">
+                            保存されたプログラム一覧
+                        </Link>
+                    )}
                     {user ? (
                         <>
                             <button
@@ -70,10 +69,4 @@ function Header() {
         </header>
     );
 }
-/*<button
-    onClick={handleLogout}
-    className="text-gray-700 hover:text-red-500 transition-colors"
->
-    ログアウト
-</button>*/
 export default Header;

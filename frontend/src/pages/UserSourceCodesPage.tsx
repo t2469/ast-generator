@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { SourceCode, getAllSourceCodes, deleteSourceCode } from "../services/api";
+import { SourceCode, getUserSourceCodes, deleteSourceCode } from "../services/api";
 
 const AllSourceCodesPage: React.FC = () => {
     const [sourceCodes, setSourceCodes] = useState<SourceCode[]>([]);
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
-        getAllSourceCodes()
+        getUserSourceCodes()
             .then((data) => setSourceCodes(data))
             .catch((err) => setError(err instanceof Error ? err.message : "Error fetching source codes"));
     }, []);

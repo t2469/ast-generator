@@ -4,6 +4,7 @@ import "time"
 
 type SourceCode struct {
 	ID          uint      `gorm:"primaryKey" json:"id"`
+	UserID      string    `json:"user_id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description" gorm:"default:''"`
 	Language    string    `json:"language"`

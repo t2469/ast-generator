@@ -3,8 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import ASTTree from './pages/ASTPage.tsx';
 import LoginPage from './pages/LoginPage';
-import AllSourceCodesPage from './pages/AllSourceCodesPage';
-import UploadPage from './pages/UploadPage.tsx';
+import AllSourceCodesPage from './pages/UserSourceCodesPage.tsx';
 
 const pageVariants = {
     initial: {
@@ -59,21 +58,6 @@ const AnimApp: React.FC = () => {
                                 transition={pageTransition}
                             >
                                 <AllSourceCodesPage />
-                            </motion.div>
-                        }
-                    />
-                    <Route
-                        path="/upload"
-                        element={
-                            <motion.div
-                                className="page absolute w-full"
-                                initial="initial"
-                                animate="in"
-                                exit="out"
-                                variants={pageVariants}
-                                transition={pageTransition}
-                            >
-                                <UploadPage />
                             </motion.div>
                         }
                     />
