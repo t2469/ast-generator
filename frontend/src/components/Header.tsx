@@ -1,4 +1,4 @@
-import { useContext,useState,useRef, useEffect } from "react";
+import { useContext,useState,useRef } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../services/api";
 import { AuthContext } from "../context/AuthContext";
@@ -69,10 +69,4 @@ function Header() {
         </header>
     );
 }
-/*<button
-    onClick={handleLogout}
-    className="text-gray-700 hover:text-red-500 transition-colors"
->
-    ログアウト
-</button>*/
 export default Header;
