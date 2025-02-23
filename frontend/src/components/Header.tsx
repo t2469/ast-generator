@@ -1,11 +1,18 @@
-import { useContext } from "react";
+import { useContext,useState,useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 import "../index.css";
+import  LogoutModal  from "./LogoutModal";
 
 function Header() {
     const { user, setUser } = useContext(AuthContext);
+    const [showModal, setShowModal] = useState(false);
+    const iconButtonRef = useRef<HTMLButtonElement>(null);
+
+    const ShowModal = () => {
+        setShowModal(true);
+    };
 
     const handleLogout = async () => {
         const success = await logout();
@@ -35,13 +42,23 @@ function Header() {
                     </Link>
                     {user ? (
                         <>
-                            <div className="text-gray-700">{user.name}</div>
                             <button
-                                onClick={handleLogout}
-                                className="text-gray-700 hover:text-red-500 transition-colors"
+                                 onClick={ShowModal}
+                                 className="relative m-0 cursor-pointer"
+                                 ref={iconButtonRef}
                             >
-                                ログアウト
+                            <img
+                                src={user.picture}
+                                alt={'${user.name}'}
+                                className="w-8 h-8 rounded-full hover:brightness-75 transition duration-200"
+                            />
                             </button>
+                            <LogoutModal 
+                                showFlag={showModal}
+                                setShowModal={setShowModal}
+                                handleLogout={handleLogout}
+                                targetRef={iconButtonRef}
+                            />
                         </>
                     ) : (
                         <Link to="/login" className="text-gray-700 hover:text-blue-500 transition-colors">
@@ -53,5 +70,10 @@ function Header() {
         </header>
     );
 }
-
+/*<button
+    onClick={handleLogout}
+    className="text-gray-700 hover:text-red-500 transition-colors"
+>
+    ログアウト
+</button>*/
 export default Header;
