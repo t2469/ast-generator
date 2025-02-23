@@ -39,9 +39,6 @@ function Header() {
                             保存されたプログラム一覧
                         </Link>
                     )}
-                    <Link to="/upload" className="text-gray-700 hover:text-blue-500 transition-colors">
-                        投稿
-                    </Link>
                     {user ? (
                         <>
                             <button
