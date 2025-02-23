@@ -80,6 +80,7 @@ export async function saveSourceCode(data: {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
     });
 
@@ -92,6 +93,7 @@ export async function saveSourceCode(data: {
 export async function deleteSourceCode(id: number): Promise<void> {
     const response = await fetch(`http://localhost:8080/source_codes/${id}`, {
         method: "DELETE",
+        credentials: "include",
     });
 
     if (!response.ok) {
@@ -99,8 +101,8 @@ export async function deleteSourceCode(id: number): Promise<void> {
     }
 }
 
-export async function getAllSourceCodes(): Promise<SourceCode[]> {
-    const response = await fetch("http://localhost:8080/source_codes", {
+export async function getUserSourceCodes(): Promise<SourceCode[]> {
+    const response = await fetch("http://localhost:8080/source_codes/user", {
         method: "GET",
         credentials: "include",
     });

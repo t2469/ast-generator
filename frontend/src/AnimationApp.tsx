@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import ASTTree from './pages/ASTPage.tsx';
 import LoginPage from './pages/LoginPage';
-import AllSourceCodesPage from './pages/AllSourceCodesPage';
+import AllSourceCodesPage from './pages/UserSourceCodesPage.tsx';
 import UploadPage from './pages/UploadPage.tsx';
 
 const pageVariants = {
