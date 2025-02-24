@@ -7,7 +7,7 @@ const LogoutModal = (props: any) => {
         if (modalRef.current && props.targetRef.current) {
             const iconRect = props.targetRef.current.getBoundingClientRect();
             modalRef.current.style.top = `${iconRect.bottom+15}px`;
-            modalRef.current.style.left = `${iconRect.left - 45}px`;
+            modalRef.current.style.left = `${iconRect.left - 32}px`;
         }
     };
 
@@ -36,7 +36,7 @@ const LogoutModal = (props: any) => {
         <>
             {props.showFlag ? (
                 <div className="fixed inset-0 flex justify-center items-start z-50">
-                    <div className="bg-white p-5 rounded shadow-lg fixed z-60" ref={modalRef}>
+                    <div className="bg-white p-2 rounded shadow-lg fixed z-60" ref={modalRef}>
                         <button
                             onClick={props.handleLogout}
                             className="text-gray-700 hover:text-red-500 transition-colors cursor-pointer m-0"
