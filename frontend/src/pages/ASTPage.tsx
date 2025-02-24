@@ -78,7 +78,7 @@ const ASTPage: React.FC = () => {
         <div className="relative">
             {!showSaveModal && (
                 <div className="container mx-auto p-6 pt-20">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-6">
                         {/* コード入力フォーム */}
                         <div className="bg-white p-6 rounded-lg shadow">
                             <h2 className="text-2xl font-bold mb-4">コード入力</h2>

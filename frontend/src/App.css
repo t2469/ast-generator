@@ -53,3 +53,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.fullscreen {
+  height: 100vh;
+  background: #fff;
+}

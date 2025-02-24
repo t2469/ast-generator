@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Tree from "react-d3-tree";
 import { ASTNode } from "../services/api";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 interface TreeNode {
     name: string;
@@ -85,6 +86,8 @@ const ASTTree: React.FC<ASTTreeProps> = ({ node }) => {
     const [dfsOrder, setDfsOrder] = useState<number[]>([]);
     const treeContainer = useRef<HTMLDivElement>(null);
 
+    const handle = useFullScreenHandle();
+
     useEffect(() => {
         if (treeContainer.current) {
             const dimensions = treeContainer.current.getBoundingClientRect();
@@ -119,29 +122,34 @@ const ASTTree: React.FC<ASTTreeProps> = ({ node }) => {
 
     const containerStyles = {
         width: "100%",
-        height: "800px",
+        height: "100%",
         border: "1px solid #ccc",
         backgroundColor: "#ffffff",
     };
 
     return (
         <div id="treeWrapper" style={containerStyles} ref={treeContainer}>
-            <Tree
-                data={treeData}
-                translate={translate}
-                orientation="vertical"
-                pathFunc="elbow"
-                collapsible
-                transitionDuration={1250}
-                enableLegacyTransitions
-                renderCustomNodeElement={({ nodeDatum }) => (
-                    <CustomNodeElement
-                        nodeDatum={nodeDatum}
-                        highlighted={nodeDatum.attributes?.id === currentHighlightId}
+            <button className="relative top-2 left-[44%] border-2 border-black p-1 bg-white cursor-pointer text-gray-700 hover:text-blue-500 transition-colors" onClick={handle.enter}>
+                フルスクリーン
+            </button>
+            <FullScreen handle={handle}>
+                    <Tree
+                        data={treeData}
+                        translate={translate}
+                        orientation="vertical"
+                        pathFunc="elbow"
+                        collapsible
+                        transitionDuration={1250}
+                        enableLegacyTransitions
+                        renderCustomNodeElement={({ nodeDatum }) => (
+                            <CustomNodeElement
+                                nodeDatum={nodeDatum}
+                                highlighted={nodeDatum.attributes?.id === currentHighlightId}
+                            />
+                        )}
+                        zoomable
                     />
-                )}
-                zoomable
-            />
+            </FullScreen>
         </div>
     );
 };
