@@ -5,6 +5,10 @@ import { AuthContext } from "../context/AuthContext";
 import "../index.css";
 import  LogoutModal  from "./LogoutModal";
 
+const handleLogin = () => {
+    window.location.href = "http://localhost:8080/auth/google/login";
+};
+
 function Header() {
     const { user, setUser } = useContext(AuthContext);
     const [showModal, setShowModal] = useState(false);
@@ -60,9 +64,12 @@ function Header() {
                             />
                         </>
                     ) : (
-                        <Link to="/login" className="text-gray-700 hover:text-blue-500 transition-colors">
+                        <button
+                            onClick={handleLogin}
+                            className="text-gray-700 hover:text-blue-500 transition-colors cursor-pointer"
+                        >
                             ログイン
-                        </Link>
+                        </button>
                     )}
                 </nav>
             </div>
