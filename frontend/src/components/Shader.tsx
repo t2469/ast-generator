@@ -1,19 +1,23 @@
-import { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import {StrictMode, useRef} from 'react';
+import {Canvas, useFrame} from '@react-three/fiber';
+import {createRoot} from 'react-dom/client'
 import './shader.css'
+import * as THREE from 'three';
 
-let d=new Date();
+const startTime = Date.now();
 
 const Render = () => {
-    const ref = useRef();
-    useFrame(({clock, mouse}) => {
-        ref.current.material.uniforms.uTime = {value: clock.getElapsedTime()- (d.getTime()/1000)%86000}
+    const ref = useRef<THREE.Mesh>(null);
+
+    useFrame(({clock}) => {
+        if (ref.current && ref.current.material && (ref.current.material as THREE.ShaderMaterial).uniforms.uTime) {
+            (ref.current.material as THREE.ShaderMaterial).uniforms.uTime.value =
+                clock.getElapsedTime() - ((startTime / 1000) % 86000);
+        }
     });
     return (
         <mesh ref={ref}>
-            <planeGeometry args={[2, 2, 64, 64]} />
+            <planeGeometry args={[2, 2, 64, 64]}/>
             <shaderMaterial
                 vertexShader={`
                     uniform float uTime;
@@ -213,32 +217,33 @@ const Render = () => {
                         gl_FragColor = vec4(col.rgb,1.);
                     }
                     `}
-                uniforms={{uTime: { value: 10.}}}
+                uniforms={{uTime: {value: 10.}}}
             />
         </mesh>
     )
 }
 
 const Shader = () => {
-return (
-  <Canvas
-    camera={{
-      fov: 10,
-      near: 0.2,
-      far: 1000,
-      //position: [0, 0, calcDistFromFov(60)],
-    }}
-    id="canvas"
-  >
-    <Render />
-  </Canvas>
-)}
+    return (
+        <Canvas
+            camera={{
+                fov: 10,
+                near: 0.2,
+                far: 1000,
+                //position: [0, 0, calcDistFromFov(60)],
+            }}
+            id="canvas"
+        >
+            <Render/>
+        </Canvas>
+    )
+}
 
 export default Shader
 
 createRoot(document.getElementById('shader')!).render(
     <StrictMode>
-      <Shader />
+        <Shader/>
     </StrictMode>,
-  )
+)
   
