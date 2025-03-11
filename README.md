@@ -7,7 +7,7 @@
 ### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/t2469/AST-Generator.git
+git clone https://github.com/t2469/ast-generator.git
 cd AST-Generator
 ```
 
