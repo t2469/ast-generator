@@ -4,16 +4,10 @@ resource "aws_security_group" "nat_sg" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port = 1024
-    to_port   = 65535
-    protocol  = "tcp"
-    cidr_blocks = [var.private_subnet_cidr_a]
-  }
-  ingress {
-    from_port = 1024
-    to_port   = 65535
-    protocol  = "udp"
-    cidr_blocks = [var.private_subnet_cidr_a]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.private_subnet_cidr_a, var.private_subnet_cidr_c]
   }
   ingress {
     from_port = 22
@@ -44,7 +38,7 @@ resource "aws_instance" "nat" {
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.public_a.id
   associate_public_ip_address = true
-  security_groups             = [aws_security_group.nat_sg.id]
+  security_groups = [aws_security_group.nat_sg.id]
   key_name                    = var.key_pair_name
   source_dest_check           = false
 
@@ -54,6 +48,7 @@ resource "aws_instance" "nat" {
     echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
     sysctl -p
     iptables -t nat -A POSTROUTING -o eth0 -s ${var.private_subnet_cidr_a} -j MASQUERADE
+    iptables -t nat -A POSTROUTING -o eth0 -s ${var.private_subnet_cidr_c} -j MASQUERADE
     yum install -y iptables-services
     service iptables save
     service iptables restart
@@ -64,9 +59,3 @@ resource "aws_instance" "nat" {
     Project = var.project_name
   }
 }
-
-
-
-
-
-

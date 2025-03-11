@@ -68,8 +68,8 @@ resource "aws_ecs_task_definition" "frontend" {
       image = "${aws_ecr_repository.frontend.repository_url}:latest"
       portMappings = [
         {
-          containerPort = 80,
-          hostPort      = 80,
+          containerPort = 5173,
+          hostPort      = 5173,
           protocol      = "tcp"
         }
       ]
@@ -137,7 +137,13 @@ resource "aws_ecs_service" "frontend" {
 
   network_configuration {
     subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
-    assign_public_ip = true
+    assign_public_ip = false
     security_groups = [aws_security_group.ecs_service_sg.id]
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.frontend_tg.arn
+    container_name   = "frontend"
+    container_port   = 5173
   }
 }
