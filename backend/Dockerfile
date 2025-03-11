@@ -1,4 +1,4 @@
-FROM golang:1.23.6
+FROM golang:1.23.6 AS builder
 
 ENV ROOT=/go/src/app
 WORKDIR ${ROOT}
@@ -7,7 +7,16 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+RUN go build -o main .
+
+FROM debian:bullseye-slim
+
+WORKDIR /root/
+
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /go/src/app/main .
 
 EXPOSE 8080
 
-CMD ["go", "run", "main.go"]
+CMD ["./main"]
