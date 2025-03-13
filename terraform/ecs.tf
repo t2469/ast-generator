@@ -19,6 +19,23 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   })
 }
 
+resource "aws_iam_role" "ecs_task_role" {
+  name = "ecsTaskRole"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -31,6 +48,7 @@ resource "aws_ecs_task_definition" "backend" {
   cpu                = "256"
   memory             = "512"
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn      = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -61,6 +79,7 @@ resource "aws_ecs_task_definition" "frontend" {
   cpu                = "256"
   memory             = "512"
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn      = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -90,6 +109,13 @@ resource "aws_security_group" "ecs_service_sg" {
   }
 
   ingress {
+    from_port = 5173
+    to_port   = 5173
+    protocol  = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+  }
+
+  ingress {
     from_port = 80
     to_port   = 80
     protocol  = "tcp"
@@ -105,11 +131,12 @@ resource "aws_security_group" "ecs_service_sg" {
 }
 
 resource "aws_ecs_service" "backend" {
-  name            = "backend-service"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.backend.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name                   = "backend-service"
+  cluster                = aws_ecs_cluster.main.id
+  task_definition        = aws_ecs_task_definition.backend.arn
+  desired_count          = 2
+  launch_type            = "FARGATE"
+  enable_execute_command = true
 
   network_configuration {
     subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
@@ -129,11 +156,12 @@ resource "aws_ecs_service" "backend" {
 }
 
 resource "aws_ecs_service" "frontend" {
-  name            = "frontend-service"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.frontend.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
+  name                   = "frontend-service"
+  cluster                = aws_ecs_cluster.main.id
+  task_definition        = aws_ecs_task_definition.frontend.arn
+  desired_count          = 2
+  launch_type            = "FARGATE"
+  enable_execute_command = true
 
   network_configuration {
     subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
