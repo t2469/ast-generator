@@ -1,7 +1,6 @@
 FROM golang:1.23.6 AS builder
 
-ENV ROOT=/go/src/app
-WORKDIR ${ROOT}
+WORKDIR /go/src/app
 
 COPY go.mod go.sum ./
 RUN go mod download
@@ -9,7 +8,7 @@ RUN go mod download
 COPY . .
 RUN go build -o main .
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 WORKDIR /root/
 
