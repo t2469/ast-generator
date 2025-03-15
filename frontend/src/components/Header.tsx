@@ -1,16 +1,18 @@
-import { useContext,useState,useRef } from "react";
-import { Link } from "react-router-dom";
-import { logout } from "../services/api";
-import { AuthContext } from "../context/AuthContext";
+import {useContext, useRef, useState} from "react";
+import {Link} from "react-router-dom";
+import {logout} from "../services/api";
+import {AuthContext} from "../context/AuthContext";
 import "../index.css";
-import  LogoutModal  from "./LogoutModal";
+import LogoutModal from "./LogoutModal";
+
+const BASE_URL = import.meta.env.VITE_API_URL
 
 const handleLogin = () => {
-    window.location.href = "http://localhost:8080/auth/google/login";
+    window.location.href = `${BASE_URL}/auth/google/login`;
 };
 
 function Header() {
-    const { user, setUser } = useContext(AuthContext);
+    const {user, setUser} = useContext(AuthContext);
     const [showModal, setShowModal] = useState(false);
     const iconButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -46,17 +48,17 @@ function Header() {
                     {user ? (
                         <>
                             <button
-                                 onClick={ShowModal}
-                                 className="relative m-0 cursor-pointer"
-                                 ref={iconButtonRef}
+                                onClick={ShowModal}
+                                className="relative m-0 cursor-pointer"
+                                ref={iconButtonRef}
                             >
-                            <img
-                                src={user.picture}
-                                alt={'${user.name}'}
-                                className="w-8 h-8 rounded-full hover:brightness-75 transition duration-200"
-                            />
+                                <img
+                                    src={user.picture}
+                                    alt={'${user.name}'}
+                                    className="w-8 h-8 rounded-full hover:brightness-75 transition duration-200"
+                                />
                             </button>
-                            <LogoutModal 
+                            <LogoutModal
                                 showFlag={showModal}
                                 setShowModal={setShowModal}
                                 handleLogout={handleLogout}
@@ -76,4 +78,5 @@ function Header() {
         </header>
     );
 }
+
 export default Header;
