@@ -13,6 +13,10 @@ import (
 func RegisterRoutes(router *gin.Engine) {
 	router.POST("/parse", controllers.ParseCode)
 
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
 	router.GET("/auth/google/login", func(c *gin.Context) {
 		state := config.GenerateState(16)
 
