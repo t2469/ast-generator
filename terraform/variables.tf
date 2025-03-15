@@ -94,6 +94,16 @@ variable "jwt_secret" {
   sensitive   = true
 }
 
+variable "frontend_url" {
+  type        = string
+  description = "Frontend URL used by the backend service"
+}
+
+variable "vite_api_url" {
+  type        = string
+  description = "Frontend URL used by the backend service"
+}
+
 # variable "hosted_zone_id" {
 #   description = "Route53 hosted zone ID"
 #   type        = string

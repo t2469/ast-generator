@@ -13,6 +13,7 @@ import (
 
 var GoogleOauthConfig *oauth2.Config
 var JwtSecret string
+var FrontendURL string
 
 func LoadEnv() {
 	if os.Getenv("GO_ENV") != "production" {
@@ -36,6 +37,7 @@ func InitConfig() {
 	}
 
 	JwtSecret = os.Getenv("JWT_SECRET")
+	FrontendURL = os.Getenv("FRONTEND_URL")
 }
 
 func GenerateState(len int) string {

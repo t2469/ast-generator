@@ -28,10 +28,12 @@ export interface SourceCode {
     created_at: string;
 }
 
+const BASE_URL = import.meta.env.VITE_API_URL
+
 export async function parseCode(request: ParseRequest): Promise<ASTNode> {
-    const response = await fetch("http://localhost:8080/parse", {
+    const response = await fetch(`${BASE_URL}/parse`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(request),
     });
     if (!response.ok) {
@@ -42,7 +44,7 @@ export async function parseCode(request: ParseRequest): Promise<ASTNode> {
 
 export async function getCurrentUser(): Promise<UserInfo> {
     try {
-        const response = await fetch("http://localhost:8080/auth/current_user", {
+        const response = await fetch(`${BASE_URL}/auth/current_user`, {
             method: "GET",
             credentials: "include",
         });
@@ -50,8 +52,7 @@ export async function getCurrentUser(): Promise<UserInfo> {
         if (!response.ok) {
             throw new Error(`get current user API Error: ${response.status}`);
         }
-        const data = await response.json();
-        return data as UserInfo;
+        return response.json() as Promise<UserInfo>;
     } catch (error) {
         console.error("Error fetching user info:", error);
         throw error;
@@ -60,7 +61,7 @@ export async function getCurrentUser(): Promise<UserInfo> {
 
 export async function logout(): Promise<boolean> {
     try {
-        const response = await fetch("http://localhost:8080/auth/logout", {
+        const response = await fetch(`${BASE_URL}/auth/logout`, {
             method: "GET",
             credentials: "include",
         });
@@ -77,11 +78,9 @@ export async function saveSourceCode(data: {
     language: string;
     code: string;
 }): Promise<SourceCode> {
-    const response = await fetch("http://localhost:8080/source_codes/save", {
+    const response = await fetch(`${BASE_URL}/source_codes/save`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         credentials: "include",
         body: JSON.stringify(data),
     });
@@ -93,7 +92,7 @@ export async function saveSourceCode(data: {
 }
 
 export async function deleteSourceCode(id: number): Promise<void> {
-    const response = await fetch(`http://localhost:8080/source_codes/${id}`, {
+    const response = await fetch(`${BASE_URL}/source_codes/${id}`, {
         method: "DELETE",
         credentials: "include",
     });
@@ -104,7 +103,7 @@ export async function deleteSourceCode(id: number): Promise<void> {
 }
 
 export async function getUserSourceCodes(): Promise<SourceCode[]> {
-    const response = await fetch("http://localhost:8080/source_codes/user", {
+    const response = await fetch(`${BASE_URL}/source_codes/user`, {
         method: "GET",
         credentials: "include",
     });

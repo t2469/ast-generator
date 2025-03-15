@@ -80,6 +80,9 @@ resource "aws_ecs_task_definition" "frontend" {
           protocol      = "tcp"
         }
       ]
+      environment = [
+        { name = "VITE_API_URL", value = var.vite_api_url }
+      ]
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -122,7 +125,8 @@ resource "aws_ecs_task_definition" "backend" {
         { name = "GOOGLE_CLIENT_ID", value = var.google_client_id },
         { name = "GOOGLE_CLIENT_SECRET", value = var.google_client_secret },
         { name = "GOOGLE_REDIRECT_URL", value = var.google_redirect_url },
-        { name = "JWT_SECRET", value = var.jwt_secret }
+        { name = "JWT_SECRET", value = var.jwt_secret },
+        { name = "FRONTEND_URL", value = var.frontend_url }
       ]
       logConfiguration = {
         logDriver = "awslogs",

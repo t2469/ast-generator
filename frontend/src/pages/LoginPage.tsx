@@ -1,5 +1,7 @@
+const BASE_URL = import.meta.env.VITE_API_URL
+
 const handleLogin = () => {
-    window.location.href = "http://localhost:8080/auth/google/login";
+    window.location.href = `${BASE_URL}/auth/google/login`;
 };
 
 const LoginPage: React.FC = () => {
