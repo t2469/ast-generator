@@ -70,6 +70,30 @@ variable "admin_ip" {
   sensitive   = true
 }
 
+variable "google_client_id" {
+  description = "Google OAuth Client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "google_client_secret" {
+  description = "Google OAuth Client Secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "google_redirect_url" {
+  description = "Google OAuth Redirect URL"
+  type        = string
+  sensitive   = true
+}
+
+variable "jwt_secret" {
+  description = "JWT secret key"
+  type        = string
+  sensitive   = true
+}
+
 # variable "hosted_zone_id" {
 #   description = "Route53 hosted zone ID"
 #   type        = string
@@ -79,6 +103,3 @@ variable "admin_ip" {
 #   description = "Domain name for the Route53 record"
 #   type        = string
 # }
-
-
-

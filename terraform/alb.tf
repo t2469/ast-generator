@@ -23,6 +23,7 @@ resource "aws_lb_target_group" "backend_tg" {
     timeout             = 5
     healthy_threshold   = 3
     unhealthy_threshold = 3
+    matcher             = "200-399"
   }
 }
 
@@ -65,7 +66,7 @@ resource "aws_lb_listener_rule" "backend_rule" {
 
   condition {
     path_pattern {
-      values = ["/api/*"]
+      values = ["/parse", "/auth/*", "/source_codes*", "/health"]
     }
   }
 }
