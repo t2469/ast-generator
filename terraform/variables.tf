@@ -104,6 +104,17 @@ variable "vite_api_url" {
   description = "Frontend URL used by the backend service"
 }
 
+variable "backend_image_tag" {
+  type        = string
+  description = "Docker image tag for versioning the backend image"
+}
+
+variable "frontend_image_tag" {
+  type        = string
+  description = "Docker image tag for versioning the frontend image"
+}
+
+
 # variable "hosted_zone_id" {
 #   description = "Route53 hosted zone ID"
 #   type        = string
