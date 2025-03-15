@@ -35,10 +35,61 @@ resource "aws_iam_role" "ecs_task_role" {
   })
 }
 
+resource "aws_iam_role_policy" "ecs_task_exec_policy" {
+  name = "ecsTaskExecPolicy"
+  role = aws_iam_role.ecs_task_role.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_ecs_task_definition" "frontend" {
+  family             = "frontend-task"
+  network_mode       = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                = "256"
+  memory             = "512"
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn      = aws_iam_role.ecs_task_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "frontend"
+      image = "${aws_ecr_repository.frontend.repository_url}:latest"
+      portMappings = [
+        {
+          containerPort = 5173,
+          hostPort      = 5173,
+          protocol      = "tcp"
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_frontend_log_group.name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "frontend"
+        }
+      }
+    }
+  ])
 }
 
 resource "aws_ecs_task_definition" "backend" {
@@ -68,30 +119,14 @@ resource "aws_ecs_task_definition" "backend" {
         { name = "DB_PASSWORD", value = var.db_password },
         { name = "DB_NAME", value = var.db_name }
       ]
-    }
-  ])
-}
-
-resource "aws_ecs_task_definition" "frontend" {
-  family             = "frontend-task"
-  network_mode       = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                = "256"
-  memory             = "512"
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn      = aws_iam_role.ecs_task_role.arn
-
-  container_definitions = jsonencode([
-    {
-      name  = "frontend"
-      image = "${aws_ecr_repository.frontend.repository_url}:latest"
-      portMappings = [
-        {
-          containerPort = 5173,
-          hostPort      = 5173,
-          protocol      = "tcp"
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_backend_log_group.name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "backend"
         }
-      ]
+      }
     }
   ])
 }
@@ -137,6 +172,7 @@ resource "aws_ecs_service" "backend" {
   desired_count          = 2
   launch_type            = "FARGATE"
   enable_execute_command = true
+  force_new_deployment   = true
 
   network_configuration {
     subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
@@ -162,6 +198,7 @@ resource "aws_ecs_service" "frontend" {
   desired_count          = 2
   launch_type            = "FARGATE"
   enable_execute_command = true
+  force_new_deployment   = true
 
   network_configuration {
     subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
