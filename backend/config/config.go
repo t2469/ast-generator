@@ -15,9 +15,13 @@ var GoogleOauthConfig *oauth2.Config
 var JwtSecret string
 
 func LoadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if os.Getenv("GO_ENV") != "production" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	} else {
+		log.Println("Production mode: .env file loading skipped")
 	}
 }
 
