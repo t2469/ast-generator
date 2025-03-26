@@ -1,16 +1,15 @@
 # AST Generator
 
-> 抽象構文木（AST）の生成・可視化ツール  
-> [デモURL](http://ast-generator-alb-1647531740.ap-northeast-1.elb.amazonaws.com/)
-
-![ast-generator](images/ast-generator.png)
-
----
-
 ## 📌 プロジェクト概要
 
 **AST Generator**
 は、任意のプログラミングコードから抽象構文木（AST）を生成し、直感的なツリービューで可視化するWebアプリケーションです。
+
+---
+> 抽象構文木（AST）の生成・可視化ツール  
+> [デモURL](http://ast-generator-alb-1647531740.ap-northeast-1.elb.amazonaws.com/)
+
+![ast-generator](images/ast-generator.png)
 
 ---
 
@@ -43,4 +42,5 @@ cd ast-generator
 ```bash
 docker compose up -d [--build]
 ```
+
 ---
