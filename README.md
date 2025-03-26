@@ -1,186 +1,46 @@
-# AST-Generator
-## 抽象構文木(AST)の可視化
+# AST Generator
+
+> 抽象構文木（AST）の生成・可視化ツール  
+> [デモURL](http://ast-generator-alb-1647531740.ap-northeast-1.elb.amazonaws.com/)
+
 ![ast-generator](images/ast-generator.png)
 
-## クローンと初期設定
+---
 
-### 1. リポジトリをクローン
+## 📌 プロジェクト概要
+
+**AST Generator**
+は、任意のプログラミングコードから抽象構文木（AST）を生成し、直感的なツリービューで可視化するWebアプリケーションです。
+
+---
+
+## 🛠 使用技術
+
+| 分類          | 技術・ツール                                                  |
+|-------------|---------------------------------------------------------|
+| **フロントエンド** | React, TypeScript, Vite                                 |
+| **バックエンド**  | Go (Gin Framework)                                      |
+| **インフラ**    | Docker, Docker Compose                                  |
+| **IaC**     | Terraform                                               |
+| **クラウド環境**  | AWS (ECS [Fargate], ECR, RDS, VPC, ALB, NATインスタンス[EC2]) |
+
+---
+
+## 🚀 セットアップ方法
+
+### 1. リポジトリのクローン
 
 ```bash
 git clone https://github.com/t2469/ast-generator.git
-cd AST-Generator
+cd ast-generator
 ```
 
 ### 2. Docker Composeでの起動
 
-必要な場合のみビルドオプションを付ける  
-コンテナを停止する際は `docker compose down`
+※初回ビルドが必要な場合は `--build` を付けてください。  
+※コンテナ停止時は `docker compose down` を実行します。
 
 ```bash
 docker compose up -d [--build]
 ```
-
-### 3. 各サーバーの起動
-
-#### Reactの場合
-
-```bash
-docker exec -it front ash
-npm run dev
-```
-
-#### Ginの場合
-
-```bash
-docker exec -it back bash
-go run main.go
-```
-
-### その他
-#### DBへのアクセス
-
-```bash
-docker exec -it db bash
-```
-
-#### MySQLへのログイン
-
-パスワードは `<MYSQL_PASSWORD>` を入力
-
-```bash
-mysql -u <MYSQL_USER> -p
-```
-
 ---
-## サンプルコード
-
-### Bash
-
-```bash
-#!/bin/bash
-echo "Hello, World!"
-```
-
-### C
-
-```c
-#include <stdio.h>
-int main() {
-    printf("Hello, World!\n");
-    return 0;
-}
-```
-
-### C++
-
-```cpp
-#include <iostream>
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}
-```
-
-### CSS
-
-```css
-body {
-    background-color: #fff;
-    color: #333;
-}
-```
-
-### Dockerfile
-
-```dockerfile
-FROM alpine:latest
-CMD ["echo", "Hello, World!"]
-```
-
-### Go
-
-```go
-package main
-import "fmt"
-func main() {
-    fmt.Println("Hello, World!")
-}
-```
-
-### HTML
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello, World!</title>
-</head>
-<body>
-    <h1>Hello, World!</h1>
-</body>
-</html>
-```
-
-### Java
-
-```java
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}
-```
-
-### JavaScript
-
-```javascript
-console.log("Hello, World!");
-```
-
-### Kotlin
-
-```kotlin
-fun main() {
-    println("Hello, World!")
-}
-```
-
-### PHP
-
-```php
-<?php
-echo "Hello, World!";
-?>
-```
-
-### Python
-
-```python
-print("Hello, World!")
-```
-
-### Ruby
-
-```ruby
-puts "Hello, World!"
-```
-
-### Rust
-
-```rust
-fn main() {
-    println!("Hello, World!");
-}
-```
-
-### SQL
-
-```sql
-SELECT 'Hello, World!';
-```
-
-### YAML
-
-```yaml
-message: "Hello, World!"
-```
