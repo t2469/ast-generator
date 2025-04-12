@@ -7,7 +7,7 @@
 
 ---
 > 抽象構文木（AST）の生成・可視化ツール  
-> [デモURL](http://ast-generator-alb-882047228.ap-northeast-1.elb.amazonaws.com/)
+> https://ast-generator.t2469.com/
 
 ![ast-generator](images/ast-generator.png)
 
@@ -21,7 +21,7 @@
 | **バックエンド**  | Go (Gin Framework)                                      |
 | **インフラ**    | Docker, Docker Compose                                  |
 | **IaC**     | Terraform                                               |
-| **クラウド環境**  | AWS (ECS [Fargate], ECR, RDS, VPC, ALB, NATインスタンス[EC2]) |
+| **クラウド環境**  | AWS (S3, CloudFront, ECS [Fargate], ALB, NATインスタンス[EC2], RDS) |
 
 ---
 
