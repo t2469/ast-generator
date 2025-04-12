@@ -3,6 +3,7 @@
 .vscode/
 
 .env
+.env.production
 *.env
 
 **/.terraform/*
