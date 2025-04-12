@@ -104,23 +104,25 @@ variable "vite_api_url" {
   description = "Frontend URL used by the backend service"
 }
 
-variable "backend_image_tag" {
+variable "root_domain" {
+  description = "The root domain in Route53"
   type        = string
-  description = "Docker image tag for versioning the backend image"
+  default     = "t2469.com"
 }
 
-variable "frontend_image_tag" {
+variable "frontend_subdomain" {
+  description = "Subdomain for the frontend"
   type        = string
-  description = "Docker image tag for versioning the frontend image"
+  default     = "ast-generator"
 }
 
+variable "api_subdomain" {
+  description = "Subdomain for API ALB"
+  type        = string
+  default     = "api.ast-generator"
+}
 
-# variable "hosted_zone_id" {
-#   description = "Route53 hosted zone ID"
-#   type        = string
-# }
-#
-# variable "domain_name" {
-#   description = "Domain name for the Route53 record"
-#   type        = string
-# }
+variable "image_tag" {
+  description = "Docker image tag for versioning the api image"
+  type        = string
+}
