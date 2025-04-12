@@ -1,9 +1,14 @@
-resource "aws_ecs_cluster" "main" {
-  name = "${var.project_name}-ecs-cluster"
+resource "aws_ecs_cluster" "api_cluster" {
+  name = "${var.project_name}-cluster"
+
+  tags = {
+    Name    = "${var.project_name}-cluster"
+    Project = var.project_name
+  }
 }
 
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "${var.project_name}-ecs-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -11,103 +16,53 @@ resource "aws_iam_role" "ecs_task_execution_role" {
       {
         Action = "sts:AssumeRole",
         Effect = "Allow",
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
+        Principal = { Service = "ecs-tasks.amazonaws.com" }
       }
     ]
   })
 }
 
-resource "aws_iam_role" "ecs_task_role" {
-  name = "ecsTaskRole"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "ecs_task_exec_policy" {
-  name = "ecsTaskExecPolicy"
-  role = aws_iam_role.ecs_task_role.id
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "ssmmessages:CreateControlChannel",
-          "ssmmessages:CreateDataChannel",
-          "ssmmessages:OpenControlChannel",
-          "ssmmessages:OpenDataChannel"
-        ],
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
-  role       = aws_iam_role.ecs_task_execution_role.name
+resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
+  role       = aws_iam_role.ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_ecs_task_definition" "frontend" {
-  family             = "frontend-task"
-  network_mode       = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                = "256"
-  memory             = "512"
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn      = aws_iam_role.ecs_task_role.arn
-
-  container_definitions = jsonencode([
-    {
-      name  = "frontend"
-      image = "${aws_ecr_repository.frontend.repository_url}:${var.frontend_image_tag}"
-      portMappings = [
-        {
-          containerPort = 5173,
-          hostPort      = 5173,
-          protocol      = "tcp"
-        }
-      ]
-      environment = [
-        { name = "VITE_API_URL", value = var.vite_api_url }
-      ]
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.ecs_frontend_log_group.name,
-          "awslogs-region"        = var.aws_region,
-          "awslogs-stream-prefix" = "frontend"
-        }
-      }
-    }
-  ])
+resource "aws_iam_role_policy_attachment" "ecs_task_ssm" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_ecs_task_definition" "backend" {
-  family             = "backend-task"
+resource "aws_iam_role" "ecs_task_role" {
+  name = "${var.project_name}-ecs-task-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = { Service = "ecs-tasks.amazonaws.com" }
+      }
+    ]
+  })
+}
+
+resource "aws_ecs_task_definition" "api_task" {
+  family             = "${var.project_name}-api-task"
   network_mode       = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                = "256"
   memory             = "512"
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = aws_iam_role.ecs_execution_role.arn
   task_role_arn      = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
-      name  = "backend"
-      image = "${aws_ecr_repository.backend.repository_url}:${var.backend_image_tag}"
+      name      = "api"
+      image     = "${aws_ecr_repository.api_repo.repository_url}:${var.image_tag}"
+      cpu       = 256
+      memory    = 512
+      essential = true
       portMappings = [
         {
           containerPort = 8080,
@@ -129,32 +84,29 @@ resource "aws_ecs_task_definition" "backend" {
         { name = "FRONTEND_URL", value = var.frontend_url }
       ]
       logConfiguration = {
-        logDriver = "awslogs",
+        logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.ecs_backend_log_group.name,
-          "awslogs-region"        = var.aws_region,
-          "awslogs-stream-prefix" = "backend"
+          "awslogs-group"         = "/ecs/${var.project_name}-api"
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "api"
         }
       }
     }
   ])
+
+  tags = {
+    Project = var.project_name
+  }
 }
 
-resource "aws_security_group" "ecs_service_sg" {
-  name        = "ecs-service-sg"
-  description = "Security group for ECS services"
+resource "aws_security_group" "api_service_sg" {
+  name        = "${var.project_name}-api-sg"
+  description = "Security group for ECS API service"
   vpc_id      = aws_vpc.main.id
 
   ingress {
     from_port = 8080
     to_port   = 8080
-    protocol  = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
-  }
-
-  ingress {
-    from_port = 5173
-    to_port   = 5173
     protocol  = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
@@ -172,52 +124,37 @@ resource "aws_security_group" "ecs_service_sg" {
     protocol  = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name    = "${var.project_name}-api-sg"
+    Project = var.project_name
+  }
 }
 
-resource "aws_ecs_service" "backend" {
-  name                   = "backend-service"
-  cluster                = aws_ecs_cluster.main.id
-  task_definition        = aws_ecs_task_definition.backend.arn
-  desired_count          = 1
-  launch_type            = "FARGATE"
+resource "aws_ecs_service" "api_service" {
+  name            = "${var.project_name}-api-service"
+  cluster         = aws_ecs_cluster.api_cluster.id
+  task_definition = aws_ecs_task_definition.api_task.arn
+  launch_type     = "FARGATE"
+  desired_count   = 1
+
   enable_execute_command = true
-  force_new_deployment   = true
 
   network_configuration {
     subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
+    security_groups = [aws_security_group.api_service_sg.id]
     assign_public_ip = false
-    security_groups = [aws_security_group.ecs_service_sg.id]
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.backend_tg.arn
-    container_name   = "backend"
+    target_group_arn = aws_lb_target_group.api_tg.arn
+    container_name   = "api"
     container_port   = 8080
   }
 
-  deployment_controller {
-    type = "ECS"
-  }
-}
+  depends_on = [aws_lb_listener.api_https_listener]
 
-resource "aws_ecs_service" "frontend" {
-  name                   = "frontend-service"
-  cluster                = aws_ecs_cluster.main.id
-  task_definition        = aws_ecs_task_definition.frontend.arn
-  desired_count          = 1
-  launch_type            = "FARGATE"
-  enable_execute_command = true
-  force_new_deployment   = true
-
-  network_configuration {
-    subnets = [aws_subnet.private_a.id, aws_subnet.private_c.id]
-    assign_public_ip = false
-    security_groups = [aws_security_group.ecs_service_sg.id]
-  }
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.frontend_tg.arn
-    container_name   = "frontend"
-    container_port   = 5173
+  tags = {
+    Project = var.project_name
   }
 }

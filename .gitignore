@@ -3,6 +3,7 @@
 .vscode/
 
 .env
+.env.production
 *.env
 
 **/.terraform/*
@@ -19,3 +20,7 @@ override.tf.json
 .terraform.tfstate.lock.info
 .terraformrc
 terraform.rc
+
+terraform/deploy.sh
+terraform/deploy_api.sh
+terraform/deploy_web.sh
